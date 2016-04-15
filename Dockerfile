@@ -22,8 +22,8 @@ ADD supervisord-apache2.conf /etc/supervisor/conf.d/supervisord-apache2.conf
 ADD startupscript.sh /var/www/startupscript.sh
 RUN chmod 755 /*.sh && chmod 755 /var/www/startupscript.sh
 
-ADD vhost.conf /etc/apache2/sites-available/
-RUN a2ensite vhost
+ADD magento.conf /etc/apache2/sites-available/
+RUN a2dissite default && a2ensite magento
 
 
 # todo: variable for magento version
