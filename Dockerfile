@@ -23,7 +23,7 @@ ADD startupscript.sh /var/www/startupscript.sh
 RUN chmod 755 /*.sh && chmod 755 /var/www/startupscript.sh
 
 ADD magento.conf /etc/apache2/sites-available/
-RUN a2dissite default && a2ensite magento
+RUN a2dissite 000-default && a2ensite magento && service apache2 reload
 
 
 # todo: variable for magento version
