@@ -40,7 +40,6 @@ RUN cd /var/www/html/magento && \
 
 
 # todo: volumes
-EXPOSE 80 
+EXPOSE 80 8080
 
-USER www-data
 CMD ["/var/www/startupscript.sh"]
