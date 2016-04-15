@@ -1,6 +1,6 @@
 FROM ubuntu
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y update && apt-get -y install \
+RUN apt-get -y update && apt-get -y install \
   curl \
   wget \
   supervisor \
@@ -26,9 +26,9 @@ RUN chmod 755 /*.sh
 # zip? better provide the tar.gz file in git?
 RUN cd /var/www/html && \
   wget https://github.com/OpenMage/magento-mirror/archive/1.9.2.4.zip && \
-  unzip magento-1.9.2.4.zip && \
-  rm magento-1.9.2.4.zip && \
-  mv magento-1.9.2.4 magento && \
+  unzip 1.9.2.4.zip && \
+  rm 1.9.2.4.zip && \
+  mv magento-mirror-1.9.2.4 magento && \
   chown -R www-data:www-data magento 
 
 # provide current adminer
