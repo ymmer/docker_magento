@@ -1,6 +1,5 @@
 FROM ubuntu
 
-# RUN DEBIAN_FRONTEND=noninteractive apt-get -y update && apt-get -y install lamp-server
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y update && apt-get -y install \
   curl \
   wget \
@@ -13,21 +12,14 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y update && apt-get -y install \
   php5-curl \
   php5-gd \
   php5-mysql \
-  mysql-server \
   unzip \
-  pwgen
+  pwgen && \
+  php5enmod mcrypt
 
-RUN DEBIAN_FRONTEND=noninteractive php5enmod mcrypt
 
-ADD adminer.php /var/www/html/magento/
-ADD my.cnf /etc/mysql/conf.d/my.cnf
 ADD start-apache2.sh /start-apache2.sh
-ADD start-mysqld.sh /start-mysqld.sh
 ADD supervisord-apache2.conf /etc/supervisor/conf.d/supervisord-apache2.conf
-ADD supervisord-mysqld.conf /etc/supervisor/conf.d/supervisord-mysqld.conf
-ADD create_mysql_admin_user.sh /create_mysql_admin_user.sh
 RUN chmod 755 /*.sh
-RUN rm -rf /var/lib/mysql/*
 
 
 # todo: variable for magento version
@@ -39,10 +31,19 @@ RUN cd /var/www/html && \
   mv magento-1.9.2.4 magento && \
   chown -R www-data:www-data magento 
 
+# provide current adminer
+RUN cd /var/www/html/magento && \
+  wget https://www.adminer.org/static/download/4.2.4/adminer-4.2.4-mysql-de.php && \
+  mv adminer-4.2.4-mysql-de.php adminer.php && \
+  chown www-data:www-data adminer.php
+
+# vsftp
+RUN groupadd wwwftp && 
+
 ADD startupscript.sh /var/www/startupscript.sh
 
 RUN chmod 755 /var/www/*.sh
 
-EXPOSE 80 3306
+EXPOSE 80 
 
 CMD ["/var/www/startupscript.sh"]
