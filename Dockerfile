@@ -22,6 +22,9 @@ ADD supervisord-apache2.conf /etc/supervisor/conf.d/supervisord-apache2.conf
 ADD startupscript.sh /var/www/startupscript.sh
 RUN chmod 755 /*.sh && chmod 755 /var/www/startupscript.sh
 
+ADD vhost.conf /etc/apache2/sites-available/
+RUN a2ensite vhost
+
 
 # todo: variable for magento version
 # zip? better provide the tar.gz file in git?
