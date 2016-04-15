@@ -2,4 +2,4 @@
 
 # -n : nodaemon
 # -u=user 
-exec supervisord -u=www-data -n
+exec supervisord -c=/etc/supervisor/supervisor.conf -n
