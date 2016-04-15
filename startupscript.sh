@@ -1,2 +1,5 @@
 #!/bin/bash
-exec supervisord -n
+
+# -n : nodaemon
+# -u=user 
+exec supervisord -u=www-data -n
