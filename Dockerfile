@@ -19,6 +19,7 @@ RUN apt-get -y update && apt-get -y install \
 
 ADD start-apache2.sh /start-apache2.sh
 ADD supervisord-apache2.conf /etc/supervisor/conf.d/supervisord-apache2.conf
+ADD startupscript.sh /var/www/startupscript.sh
 RUN chmod 755 /*.sh
 
 
@@ -37,13 +38,9 @@ RUN cd /var/www/html/magento && \
   mv adminer-4.2.4-mysql-de.php adminer.php && \
   chown www-data:www-data adminer.php
 
-# vsftp
-RUN groupadd wwwftp && 
 
-ADD startupscript.sh /var/www/startupscript.sh
-
-RUN chmod 755 /var/www/*.sh
-
+# todo: volumes
 EXPOSE 80 
 
+USER www-data
 CMD ["/var/www/startupscript.sh"]
