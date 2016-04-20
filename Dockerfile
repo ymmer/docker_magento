@@ -4,8 +4,9 @@ RUN apt-get -y update && apt-get -y install \
   curl \
   wget \
   htop \
+  vim \
   pure-ftpd \
-  openssl \
+  openssh-server \
   supervisor \
   apache2 \
   libapache2-mod-php5 \
@@ -48,7 +49,8 @@ RUN chmod 755 /*.sh && \
   php5enmod mcrypt
 
 
-# todo: volumes
 EXPOSE 22 80
+
+VOLUME ["/var/www/magento/", "/var/log/"]
 
 CMD ["/var/www/startupscript.sh"]
