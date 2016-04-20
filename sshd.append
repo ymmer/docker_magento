@@ -1,0 +1,7 @@
+
+# allow users in magento to edit the web shop files
+Match Group magento
+        ChrootDirectory /var/www/html
+        ForceCommand internal-sftp
+        X11Forwarding no
+        AllowTcpForwarding no
