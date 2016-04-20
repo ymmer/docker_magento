@@ -17,13 +17,16 @@ RUN apt-get -y update && apt-get -y install \
   php5enmod mcrypt
 
 
+
 ADD start-apache2.sh /start-apache2.sh
 ADD supervisord-apache2.conf /etc/supervisor/conf.d/supervisord-apache2.conf
 ADD startupscript.sh /var/www/startupscript.sh
-RUN chmod 755 /*.sh && chmod 755 /var/www/startupscript.sh
 
 ADD magento.conf /etc/apache2/sites-available/magento.conf
-RUN a2dissite 000-default && a2ensite magento && service apache2 reload
+
+RUN chmod 755 /*.sh && chmod 755 /var/www/startupscript.sh && \
+  a2dissite 000-default && a2ensite magento && \
+  a2enmod rewrite
 
 
 # fetch magento from internal server, instead of wget https://github.com/OpenMage/magento-mirror/archive/1.9.2.4.zip
