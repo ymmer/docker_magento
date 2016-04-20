@@ -16,6 +16,7 @@ RUN apt-get -y update && apt-get -y install \
   php5-curl \
   php5-gd \
   php5-mysql \
+  php5-xcache \
   unzip \
   pwgen && \
   groupadd magento && \
@@ -37,21 +38,25 @@ RUN cd /var/www/html && \
 
 # TODO: tar file
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
 ADD magento.conf /etc/apache2/sites-available/magento.conf
 ADD .htaccess /var/www/html/magento/.htaccess
 ADD sshd.append /tmp/sshd.append
+ADD svd.sh /run.sh
+
 
 RUN a2dissite 000-default && \
   a2ensite magento && \
   a2enmod rewrite && \
   php5enmod mcrypt && \
   cat /tmp/sshd.append >> /etc/ssh/sshd_config && \
-  service ssh start
+  service ssh start && \
+  chmod +x /run.sh
 
 EXPOSE 22 80
 
-VOLUME ["/var/www/magento/", "/var/log/"]
+VOLUME ["/var/www/html/", "/var/log/"]
 
-USER magento
-CMD ["/usr/bin/supervisord"]
+# todo
+#USER magento
+
+CMD ["/run.sh"]
