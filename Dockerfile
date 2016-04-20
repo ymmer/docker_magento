@@ -42,10 +42,7 @@ ADD magento.conf /etc/apache2/sites-available/magento.conf
 ADD .htaccess /var/www/html/magento/.htaccess
 ADD sshd.append /tmp/sshd.append
 
-RUN chmod 755 /*.sh && \
-  chown magento /var/www/startupscript.sh && \
-  chmod 755 /var/www/startupscript.sh && \
-  a2dissite 000-default && \
+RUN a2dissite 000-default && \
   a2ensite magento && \
   a2enmod rewrite && \
   php5enmod mcrypt && \
