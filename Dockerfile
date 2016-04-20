@@ -26,13 +26,12 @@ ADD magento.conf /etc/apache2/sites-available/magento.conf
 RUN a2dissite 000-default && a2ensite magento && service apache2 reload
 
 
-# todo: variable for magento version
-# zip? better provide the tar.gz file in git?
+# fetch magento from internal server, instead of wget https://github.com/OpenMage/magento-mirror/archive/1.9.2.4.zip
 RUN cd /var/www/html && \
-  wget https://github.com/OpenMage/magento-mirror/archive/1.9.2.4.zip && \
-  unzip 1.9.2.4.zip && \
-  rm 1.9.2.4.zip && \
-  mv magento-mirror-1.9.2.4 magento && \
+  wget http://149.201.48.80/gq/magento.tar.gz && \
+  tar -xf magento.tar.gz && \
+  rm magento.tar.gz && \
+  mv src magento && \
   chown -R www-data:www-data magento 
 
 # provide current adminer
