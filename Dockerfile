@@ -36,9 +36,8 @@ RUN cd /var/www/html && \
 
 
 # TODO: tar file
-ADD start-apache2.sh /start-apache2.sh
-ADD supervisord-apache2.conf /etc/supervisor/conf.d/supervisord-apache2.conf
-ADD startupscript.sh /var/www/startupscript.sh
+ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 ADD magento.conf /etc/apache2/sites-available/magento.conf
 ADD .htaccess /var/www/html/magento/.htaccess
 ADD sshd.append /tmp/sshd.append
@@ -50,7 +49,7 @@ RUN chmod 755 /*.sh && \
   a2ensite magento && \
   a2enmod rewrite && \
   php5enmod mcrypt && \
-  cat /tmp.sshd.append >> /etc/ssh/sshd_config && \
+  cat /tmp/sshd.append >> /etc/ssh/sshd_config && \
   service ssh start
 
 EXPOSE 22 80
@@ -58,4 +57,4 @@ EXPOSE 22 80
 VOLUME ["/var/www/magento/", "/var/log/"]
 
 USER magento
-CMD ["/var/www/startupscript.sh"]
+CMD ["/usr/bin/supervisord"]
