@@ -31,28 +31,31 @@ RUN cd /var/www/html && \
   rm magento.tar.gz && \
   mv src magento && \
   cd /var/www/html/magento && \
-  wget https://www.adminer.org/static/download/4.2.4/adminer-4.2.4-mysql-de.php && \
-  mv adminer-4.2.4-mysql-de.php adminer.php && \
-  chown -R www-data:magento *
+  wget http://149.201.48.80/gq/adminer.bak && \
+  mv adminer.bak adminer.php && \
+  chown -R www-data:magento /var/www/html/magento && \
+  chmod -R g+w /var/www/html/magento
 
 
 # TODO: tar file
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-ADD magento.conf /etc/apache2/sites-available/magento.conf
+ADD magento*.conf /etc/apache2/sites-available/
 ADD .htaccess /var/www/html/magento/.htaccess
 ADD sshd.append /tmp/sshd.append
-ADD svd.sh /run.sh
+ADD run.sh /run.sh
 
 
-RUN a2dissite 000-default && \
-  a2ensite magento && \
-  a2enmod rewrite && \
+# httpd / sshd
+RUN openssl ecparam -out /etc/ssl/private/apache.key -name secp256k1 -genkey && \
+  openssl req -batch -new -x509 -key /etc/ssl/private/apache.key -days 365 -sha512 -out /etc/ssl/certs/apache.crt && \
+  a2dissite 000-default && \
+  a2ensite magento magento-ssl && \
+  a2enmod rewrite ssl && \
   php5enmod mcrypt && \
   cat /tmp/sshd.append >> /etc/ssh/sshd_config && \
-  service ssh start && \
   chmod +x /run.sh
 
-EXPOSE 22 80
+EXPOSE 22 443
 
 VOLUME ["/var/www/html/", "/var/log/"]
 
