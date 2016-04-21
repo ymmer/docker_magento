@@ -47,15 +47,15 @@ ADD run.sh /run.sh
 
 # httpd / sshd
 RUN openssl ecparam -out /etc/ssl/private/apache.key -name secp256k1 -genkey && \
-  openssl req -batch -new -x509 -key /etc/ssl/private/apache.key -days 365 -sha512 -out /etc/ssl/certs/apache.crt && \
+  openssl req -batch -new -x509 -key /etc/ssl/private/apache.key -days 365 -sha256 -out /etc/ssl/certs/apache.crt && \
   a2dissite 000-default && \
-  a2ensite magento magento-ssl && \
+  a2ensite magento && \
   a2enmod rewrite ssl && \
   php5enmod mcrypt && \
   cat /tmp/sshd.append >> /etc/ssh/sshd_config && \
   chmod +x /run.sh
 
-EXPOSE 22 443
+EXPOSE 22 80
 
 VOLUME ["/var/www/html/", "/var/log/"]
 
