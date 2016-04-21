@@ -53,7 +53,8 @@ RUN openssl ecparam -out /etc/ssl/private/apache.key -name secp256k1 -genkey && 
   a2enmod rewrite ssl && \
   php5enmod mcrypt && \
   cat /tmp/sshd.append >> /etc/ssh/sshd_config && \
-  chmod +x /run.sh
+  chmod +x /run.sh && \
+  service ssh start
 
 EXPOSE 22 80
 
