@@ -5,7 +5,6 @@ RUN apt-get -y update && apt-get -y install \
   wget \
   htop \
   vim \
-  pure-ftpd \
   openssh-server \
   supervisor \
   apache2 \
