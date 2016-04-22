@@ -9,8 +9,10 @@ RUN apt-get -y update && apt-get -y install \
   openssh-server \
   supervisor \
   apache2 \
-  libapache2-mod-php5 \
+  libapache2-mod-fcgid \
+  apache2-mpm-worker \
   php5 \
+  php5-cgi \
   mcrypt \
   php5-mcrypt \
   php5-curl \
@@ -41,17 +43,17 @@ RUN cd /var/www/html && \
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD magento*.conf /etc/apache2/sites-available/
 ADD .htaccess /var/www/html/magento/.htaccess
+ADD php-fcgid-wrapper /usr/local/bin/php-fcgid-wrapper
 ADD sshd.append /tmp/sshd.append
 ADD run.sh /run.sh
 
 
 # httpd / sshd
-RUN openssl ecparam -out /etc/ssl/private/apache.key -name secp256k1 -genkey && \
-  openssl req -batch -new -x509 -key /etc/ssl/private/apache.key -days 365 -sha256 -out /etc/ssl/certs/apache.crt && \
-  a2dissite 000-default && \
+RUN a2dissite 000-default && \
   a2ensite magento && \
-  a2enmod rewrite ssl && \
+  a2enmod fcgid rewrite ssl && \
   php5enmod mcrypt && \
+  chmod +x /usr/local/bin/php-fcgid-wrapper && \
   cat /tmp/sshd.append >> /etc/ssh/sshd_config && \
   chmod +x /run.sh && \
   service ssh start
