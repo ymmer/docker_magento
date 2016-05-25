@@ -32,10 +32,16 @@ RUN cd /var/www/html && \
   mv src magento && \
   cd /var/www/html/magento && \
   wget http://149.201.48.80/gq/adminer.bak && \
+  wget http://149.201.48.80/gq/sftppass.sh && \
   mv adminer.bak adminer.php && \
   chown -R www-data:magento /var/www/html/magento && \
   chmod -R g+w /var/www/html/magento && \
+  mv /var/www/html/magento/sftppass.sh /var/local/sftppass.sh && \
+  chmod u+x /var/local/sftppass.sh && \
   chmod u+x /var/www/html/magento/cron.sh
+
+# generate sftp password once
+RUN /var/local/sftppass.sh
 
 
 # TODO: tar file
@@ -44,7 +50,8 @@ ADD magento*.conf /etc/apache2/sites-available/
 ADD .htaccess /var/www/html/magento/.htaccess
 ADD sshd.append /tmp/sshd.append
 ADD run.sh /run.sh
-ADD chpass.sh /chpass.sh
+#ADD chpass.sh /chpass.sh
+
 
 
 # httpd / sshd
@@ -56,8 +63,6 @@ RUN openssl ecparam -out /etc/ssl/private/apache.key -name secp256k1 -genkey && 
   php5enmod mcrypt && \
   cat /tmp/sshd.append >> /etc/ssh/sshd_config && \
   chmod +x /run.sh && \
-  chmod +x /chpass.sh && \
-  /chpass.sh && \
   service ssh start
 
 EXPOSE 22 80
