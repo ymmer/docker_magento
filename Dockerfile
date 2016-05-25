@@ -34,7 +34,8 @@ RUN cd /var/www/html && \
   wget http://149.201.48.80/gq/adminer.bak && \
   mv adminer.bak adminer.php && \
   chown -R www-data:magento /var/www/html/magento && \
-  chmod -R g+w /var/www/html/magento
+  chmod -R g+w /var/www/html/magento && \
+  chmod u+x /var/www/html/magento/cron.sh
 
 
 # TODO: tar file
