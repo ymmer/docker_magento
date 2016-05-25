@@ -44,6 +44,7 @@ ADD magento*.conf /etc/apache2/sites-available/
 ADD .htaccess /var/www/html/magento/.htaccess
 ADD sshd.append /tmp/sshd.append
 ADD run.sh /run.sh
+ADD chpass.sh /chpass.sh
 
 
 # httpd / sshd
@@ -55,6 +56,8 @@ RUN openssl ecparam -out /etc/ssl/private/apache.key -name secp256k1 -genkey && 
   php5enmod mcrypt && \
   cat /tmp/sshd.append >> /etc/ssh/sshd_config && \
   chmod +x /run.sh && \
+  chmod +x /chpass.sh && \
+  /chpass.sh && \
   service ssh start
 
 EXPOSE 22 80
